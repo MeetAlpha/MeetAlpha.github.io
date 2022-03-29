@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Spring之IOC, Hexo">
-    <meta name="description" content="前言控制反转这是IOC的理论思想。原来的对象是由使用者来进行控制，有了spring之后，可以把整个对象交给spring来帮我们进行管理。DI：依赖注入，把对应的属性的值注入到具体的对象中，@Autowired，populateBean完成属">
+    <meta name="keywords" content="从暴力递归到动态规划, Hexo">
+    <meta name="description" content="一道例题假设有排成一行的N个位置，记为1到N,N一定大于或等于2开始时机器人在其中的M位置上（M一定是1到N中的一个）如果机器人来到1位置，那么下一步只能往右来到2位置;如果机器人来到N位置，那么下一步只能往左来到N-1位置;如果机器人来到">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Spring之IOC | Hexo</title>
+    <title>从暴力递归到动态规划 | Hexo</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -309,12 +309,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Spring之IOC</h1>
+                    <h1 class="description center-align post-title">从暴力递归到动态规划</h1>
                 </div>
             </div>
         </div>
@@ -442,7 +442,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-25
+                    2022-03-28
                 </div>
                 
 
@@ -463,104 +463,97 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="控制反转"><a href="#控制反转" class="headerlink" title="控制反转"></a>控制反转</h2><p>这是IOC的理论思想。原来的对象是由使用者来进行控制，有了spring之后，可以把整个对象交给spring来帮我们进行管理。<br>DI：依赖注入，把对应的属性的值注入到具体的对象中，@Autowired，populateBean完成属性值的注入。</p>
-<h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><p>这是用到的存储对象。使用map结构来存储，在spring中一般存在三级缓存，singletonObjects存放完整的bean对象,整个bean的生命周期，从创建到使用到销毁的过程全部都是由容器来管理（bean的生命周期）。</p>
-<h1 id="具体原理与实现"><a href="#具体原理与实现" class="headerlink" title="具体原理与实现"></a>具体原理与实现</h1><blockquote>
-<p>太长不看版</p>
+                <h1 id="一道例题"><a href="#一道例题" class="headerlink" title="一道例题"></a>一道例题</h1><p>假设有排成一行的N个位置，记为1到N,N一定大于或等于2<br>开始时机器人在其中的M位置上（M一定是1到N中的一个）<br>如果机器人来到1位置，那么下一步只能往右来到2位置;<br>如果机器人来到N位置，那么下一步只能往左来到N-1位置;<br>如果机器人来到中间位置，那么下一步可以往左走或者往右走;<br>规定机器人必须走K步，最终能来到P位置（P也是1~N中的一个）的方法有多少种给定四个参数N、M、K、P，返回方法数。</p>
+<h1 id="方法1：递归尝试"><a href="#方法1：递归尝试" class="headerlink" title="方法1：递归尝试"></a>方法1：递归尝试</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>两个变量：cur表示当前位置，rest表示剩余可走步数，尝试方法返回在当前cur、rest情况下，有多少种走法到达P；</p>
 <ol>
-<li>一般聊ioc容器的时候要涉及到容器的创建过程（beanFactory,DefaultListableBeanFactory）,向bean工厂中设置一些参数（BeanPostProcessor,Aware接口的子类）等等属性</li>
-<li>加载解析bean对象，准备要创建的bean对象的定义对象beanDefinition,(xml或者注解的解析过程)</li>
-<li>beanFactoryPostProcessor的处理，此处是扩展点，PlaceHolderConfigurSupport,ConfigurationClassPostProcessor</li>
-<li>BeanPostProcessor的注册功能，方便后续对bean对象完成具体的扩展功能</li>
-<li>通过反射的方式讲BeanDefinition对象实例化成具体的bean对象，</li>
-<li>bean对象的初始化过程（填充属性，调用aware子类的方法，调用BeanPostProcessor前置处理方法，调用init-mehtod方法，调用BeanPostProcessor的后置处理方法）</li>
-<li>生成完整的bean对象，通过getBean方法可以直接获取</li>
-<li>销毁过程</li>
+<li>rest为0的情况下，如果cur到达p位置，那么结算为1种走法；否则这种走法行不通，结算为0；</li>
+<li>如果cur到了1（最左侧），那么只能在cur=2，可走rest-1的情况下去尝试；</li>
+<li>如果cur到了N（最右侧），那么只能在cur=N-1，可走rest-1的情况下去尝试；</li>
+<li>其他情况下（中间位置），那么既可以向左，又可以向右尝试，走法是两种情况的总和。</li>
 </ol>
-</blockquote>
-<p>spring中的bean都是通过反射的方式生成的，同时其中包含了很多的扩展点，比如最常用的对BeanFactory的扩展，对bean的扩展（对占位符的处理），除此之外，ioc中最核心的也就是填充具体bean的属性，和生命周期。</p>
-<h1 id="Spring-IOC中的方法和调用过程"><a href="#Spring-IOC中的方法和调用过程" class="headerlink" title="Spring IOC中的方法和调用过程"></a>Spring IOC中的方法和调用过程</h1><ol>
-<li><p>先通过createBeanFactory创建出一个Bean工厂（DefaultListableBeanFactory）</p>
-</li>
-<li><p>开始循环创建对象，因为容器中的bean默认都是单例的，所以优先通过getBean,doGetBean从容器中查找，找不到的话，</p>
-</li>
-<li><p>通过createBean,doCreateBean方法，以反射的方式创建对象，一般情况下使用的是无参的构造方法（getDeclaredConstructor，newInstance）</p>
-</li>
-<li><p>进行对象的属性填充populateBean</p>
-</li>
-<li><p>进行其他的初始化操作（initializingBean）</p>
-</li>
-</ol>
-<h1 id="bean的生命周期"><a href="#bean的生命周期" class="headerlink" title="bean的生命周期"></a>bean的生命周期</h1><p><img src="https://img-blog.csdnimg.cn/20200505182715498.jpg" alt="bean的生命周期"></p>
-<ol>
-<li><p>实例化bean：反射的方式生成对象</p>
-</li>
-<li><p>填充bean的属性：populateBean(),循环依赖的问题（三级缓存）</p>
-</li>
-<li><p>调用aware接口相关的方法：invokeAwareMethod(完成BeanName,BeanFactory,BeanClassLoader对象的属性设置)</p>
-</li>
-<li><p>调用BeanPostProcessor中的前置处理方法：使用比较多的有（ApplicationContextPostProcessor,设置ApplicationContext,Environment,ResourceLoader,EmbeddValueResolver等对象）</p>
-</li>
-<li><p>调用initmethod方法：invokeInitmethod(),判断是否实现了initializingBean接口，如果有，调用afterPropertiesSet方法，没有就不调用</p>
-</li>
-<li><p>调用BeanPostProcessor的后置处理方法：spring的aop就是在此处实现的，AbstractAutoProxyCreator</p>
-</li>
-<li><p>获取到完整的对象，可以通过getBean的方式来进行对象的获取</p>
-</li>
-<li><p>销毁流程，1；判断是否实现了DispoableBean接口，2，调用destroyMethod方法</p>
-</li>
-</ol>
-<h1 id="Spring如何解决循环依赖"><a href="#Spring如何解决循环依赖" class="headerlink" title="Spring如何解决循环依赖"></a>Spring如何解决循环依赖</h1><p>A对象依赖于B，B对象依赖于A。</p>
-<ol>
-<li><p>首先Spring尝试通过ApplicationContext.getBean()方法获取A对象的实例，由于Spring容器中还没有A对象实例，因而其会创建一个A对象</p>
-</li>
-<li><p>然后发现其依赖了B对象，因而会尝试递归的通过ApplicationContext.getBean()方法获取B对象的实例</p>
-</li>
-</ol>
-<p>但是Spring容器中此时也没有B对象的实例，因而其还是会先创建一个B对象的实例。</p>
-<ol start="3">
-<li><p>此时A对象和B对象都已经创建了，并且保存在Spring容器中了，只不过A对象的属性b和B对象的属性a都还没有设置进去。</p>
-</li>
-<li><p>在前面Spring创建B对象之后，Spring发现B对象依赖了属性A，因而还是会尝试递归的调用ApplicationContext.getBean()方法获取A对象的实例</p>
-</li>
-<li><p>因为Spring中已经有一个A对象的实例，虽然只是半成品（其属性b还未初始化），但其也还是目标bean，因而会将该A对象的实例返回。</p>
-</li>
-<li><p>此时，B对象的属性a就设置进去了，然后还是ApplicationContext.getBean()方法递归的返回，也就是将B对象的实例返回，此时就会将该实例设置到A对象的属性b中。</p>
-</li>
-<li><p>这个时候，注意A对象的属性b和B对象的属性a都已经设置了目标对象的实例了</p>
-</li>
-</ol>
-<p>不难发现,前面在为对象B设置属性a的时候，这个A类型属性还是个半成,只完成了实例化但是未完成初始化，如果在程序调用过程中，拥有了某个对象的引用，能否在后期给他完成赋值操作，可以优先把非完整状态的对象优先赋值，等待后续操作来完成赋值，相当于提前暴露了某个不完整对象的引用，所以解决问题的核心在于实例化和初始化分开操作，这也是解决循环依赖问题的关键。</p>
-<h2 id="三级缓存"><a href="#三级缓存" class="headerlink" title="三级缓存"></a>三级缓存</h2><p><img src="https://img-blog.csdnimg.cn/20210311153815485.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3MTY3OA==,size_16,color_FFFFFF,t_70" alt="三级缓存"><br>当所有的对象都完成实例化和初始化操作之后，还要把完整对象放到容器中，此时在容器中存在对象的几个状态：完成实例化但未完成初始化、完整状态，因为都在容器中，所以要使用不同的map结构来进行存储，此时就有了一级缓存和二级缓存，如果一级缓存中有了，那么二级缓存中就不会存在同名的对象，因为他们的查找顺序是1，2，3这样的方式来查找的。一级缓存中放的是完整对象，二级缓存中放的是非完整对象。<br>为什么需要三级缓存？三级缓存的value类型是ObjectFactory,是一个函数式接口，存在的意义是保证在整个容器的运行过程中同名的bean对象只能有一个。</p>
-<h1 id="BeanFactory与FactoryBean有什么区别？"><a href="#BeanFactory与FactoryBean有什么区别？" class="headerlink" title="BeanFactory与FactoryBean有什么区别？"></a>BeanFactory与FactoryBean有什么区别？</h1><p>相同点：都是用来创建bean对象的</p>
-<p>不同点：使用BeanFactory创建对象的时候，必须要遵循严格的生命周期流程，太复杂了，，如果想要简单的自定义某个对象的创建，同时创建完成的对象想交给spring来管理，那么就需要实现FactroyBean接口了。</p>
-<h1 id="Spring用到的设计模式"><a href="#Spring用到的设计模式" class="headerlink" title="Spring用到的设计模式"></a>Spring用到的设计模式</h1><ul>
-<li><p>单例模式：bean默认都是单例的</p>
-</li>
-<li><p>原型模式：指定作用域为prototype</p>
-</li>
-<li><p>工厂模式：BeanFactory</p>
-</li>
-<li><p>模板方法：postProcessBeanFactory,onRefresh,initPropertyValue</p>
-</li>
-<li><p>策略模式：XmlBeanDefinitionReader,PropertiesBeanDefinitionReader</p>
-</li>
-<li><p>观察者模式：listener，event，multicast</p>
-</li>
-<li><p>适配器模式：Adapter</p>
-</li>
-<li><p>装饰者模式：BeanWrapper</p>
-</li>
-<li><p>责任链模式：使用aop的时候会先生成一个拦截器链</p>
-</li>
-<li><p>代理模式：动态代理</p>
-</li>
-<li><p>委托者模式：delegate</p>
-</li>
-<li><p>……</p>
-</li>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//固定参数N，P，可变参数cur，rest,返回在当前cur、rest情况下，有多少种走法到达P；</span>
+<span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">walk</span><span class="token punctuation">(</span><span class="token keyword">int</span> N<span class="token punctuation">,</span><span class="token keyword">int</span> cur<span class="token punctuation">,</span><span class="token keyword">int</span> rest<span class="token punctuation">,</span><span class="token keyword">int</span> P<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>rest <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> cur <span class="token operator">==</span> P <span class="token operator">?</span> <span class="token number">1</span> <span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cur <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">walk</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span>rest<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>P<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cur <span class="token operator">==</span> N<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">walk</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> rest <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> P<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token function">walk</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> cur <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> rest <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> P<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token function">walk</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> cur <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> rest <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> P<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h2><p>空间：使用了递归栈，递归树最大深度为K，所以为O(K)<br>时间：递归树节点的规模在2^K，所以为O(2^K)</p>
+<h1 id="暴力递归的不足"><a href="#暴力递归的不足" class="headerlink" title="暴力递归的不足"></a>暴力递归的不足</h1><p>暴力递归可能存在大量重复计算，我们把上面的函数简化为f(cur, rest)，目标P为4.<br>举个例子，要计算f(3,3)的值。<br>要计算f(3,3)的值，就要先计算f(2,2)和f(4,2);<br>要计算f(2，2)的值，就要先计算f(1,1)和f(3,1);<br>要计算f(4,2)的值，就要先计算f(3,1)和f(5,1);<br><img src="/images/%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%80%92%E5%BD%92%E6%A0%91.jpg" alt="递归树"><br>从递归树中，可以很清楚地看到，f(3,1)在两个分支中被重复计算。<br>那么有没有什么方法能把其他分支计算过的结果缓存起来呢？<br>答案是动态规划，也就是用数组保存。</p>
+<h1 id="改进方法1：动态规划（记忆化搜索）"><a href="#改进方法1：动态规划（记忆化搜索）" class="headerlink" title="改进方法1：动态规划（记忆化搜索）"></a>改进方法1：动态规划（记忆化搜索）</h1><h2 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h2><p>前面提到的f(3,1)的值，我们把他保存在dp[3][1]的位置当中，以给其他分支使用。<br>cur可能的变化范围是1…N，rest可能的变化范围是0…K，因此开辟[N+1][K+1]大小的数组，这个数组可以把递归过程的所有返回值装下。</p>
+<ul>
+<li>主方法中开辟dp数组，并且初始化</li>
+<li>walk方法参数中，加一个dp数组</li>
+<li>在walk方法中</li>
 </ul>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/84267654">https://zhuanlan.zhihu.com/p/84267654</a></p>
+<ol>
+<li>如果发现dp中的值不为-1，说明之前保存过状态，直接返回，不再走后面的递归；</li>
+<li>其他分支，相比原本的暴力递归直接返回，变成了先设置dp值，再返回的过程。</li>
+</ol>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">walkCache</span><span class="token punctuation">(</span><span class="token keyword">int</span> N<span class="token punctuation">,</span><span class="token keyword">int</span> cur<span class="token punctuation">,</span><span class="token keyword">int</span> rest<span class="token punctuation">,</span><span class="token keyword">int</span> P<span class="token punctuation">,</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dp<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token operator">!=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token comment" spellcheck="true">//如果发现dp中的值不为-1，说明之前保存过状态，直接返回，不再走后面的递归；</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>rest <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token operator">=</span>cur <span class="token operator">==</span> P <span class="token operator">?</span> <span class="token number">1</span> <span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//先保存，再返回</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cur <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">walkCache</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> rest <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> P<span class="token punctuation">,</span> dp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//先保存，再返回</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cur <span class="token operator">==</span> N<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token operator">=</span><span class="token function">walkCache</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> rest <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> P<span class="token punctuation">,</span>dp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//先保存，再返回</span>
+    <span class="token punctuation">}</span>
+    dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token operator">=</span><span class="token function">walkCache</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> cur <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> rest <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> P<span class="token punctuation">,</span>dp<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token function">walkCache</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> cur <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> rest <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> P<span class="token punctuation">,</span>dp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> dp<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span>rest<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//先保存，再返回</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">waysCache</span><span class="token punctuation">(</span><span class="token keyword">int</span> N<span class="token punctuation">,</span><span class="token keyword">int</span> M<span class="token punctuation">,</span><span class="token keyword">int</span> K<span class="token punctuation">,</span><span class="token keyword">int</span> P<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">int</span><span class="token punctuation">[</span>N <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>K <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> row <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> row <span class="token operator">&lt;=</span>N <span class="token punctuation">;</span> row<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> col <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> col <span class="token operator">&lt;=</span>K <span class="token punctuation">;</span> col<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            dp<span class="token punctuation">[</span>row<span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//初始化，所有信息都不知道</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token function">walkCache</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span>M<span class="token punctuation">,</span>K<span class="token punctuation">,</span>P<span class="token punctuation">,</span>dp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="复杂度-1"><a href="#复杂度-1" class="headerlink" title="复杂度"></a>复杂度</h2><p>空间：使用了递归栈，递归树最大深度为K，又申请了一张表，所以为O(N*K)<br>时间：逐步填满了整张表，所以为O(N*K)</p>
+<h1 id="改进方法2：经典动态规划"><a href="#改进方法2：经典动态规划" class="headerlink" title="改进方法2：经典动态规划"></a>改进方法2：经典动态规划</h1><p>在改进方法1中，我们使用了动态规划优化了时间复杂度，但是这种方法内部看起来还是包含了递归；<br>经典的动态规划中，不出现递归，而是直接找dp[i][j]和它上下左右的依赖关系，一步步把整张dp填满。</p>
+<h2 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h2><p>从改进方法1或暴力递归中，我们可以看出：</p>
+<ul>
+<li>在第0列上，除了dp[P][0]=1,其他的dp[…][0]均为0；</li>
+<li>在第一行上，dp[1][rest]=dp[2][rest-1];即除了最左的格子，其他格子都依赖于左下角的格子</li>
+<li>在中间行上，dp[cur][rest]=dp[cur-1][rest-1]+dp[cur+1][rest-1];;即除了最左的格子，其他格子都依赖于左上角和左下角的格子</li>
+<li>在最后一行上，dp[N][rest]=dp[N-1][rest-1];即除了最左的格子，其他格子都依赖于左上角的格子<br><img src="/images/%E6%9C%BA%E5%99%A8%E4%BA%BAdp%E8%A1%A8.png" alt="dp表的依赖关系"><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">waysCache2</span><span class="token punctuation">(</span><span class="token keyword">int</span> N<span class="token punctuation">,</span><span class="token keyword">int</span> M<span class="token punctuation">,</span><span class="token keyword">int</span> K<span class="token punctuation">,</span><span class="token keyword">int</span> P<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token keyword">int</span>\<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">int</span><span class="token punctuation">[</span>N <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>K <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//        for (int row = 1; row &lt;=N ; row++) {</span>
+<span class="token comment" spellcheck="true">//            dp[row][0]=0;  //可省略，因为初始化的数组默认是0</span>
+<span class="token comment" spellcheck="true">//        }</span>
+  dp<span class="token punctuation">[</span>P<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">//以下循环可将row重命名为cur，col重命名为rest</span>
+  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> col<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>col<span class="token operator">&lt;=</span>K<span class="token punctuation">;</span>col<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      dp<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token punctuation">]</span><span class="token operator">=</span>dp<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//第一行特殊处理</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">;</span>row<span class="token operator">&lt;=</span>N<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>row<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+          dp<span class="token punctuation">[</span>row<span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token punctuation">]</span><span class="token operator">=</span>dp<span class="token punctuation">[</span>row<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">+</span>dp<span class="token punctuation">[</span>row<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      dp<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token punctuation">]</span><span class="token operator">=</span>dp<span class="token punctuation">[</span>N<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>col<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//最后一行特殊处理</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> dp<span class="token punctuation">[</span>M<span class="token punctuation">]</span><span class="token punctuation">[</span>K<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="复杂度-2"><a href="#复杂度-2" class="headerlink" title="复杂度"></a>复杂度</h2>空间：申请了一张表，所以为O(N*K)<br>时间：逐步填满了整张表，所以为O(N*K)</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>左程云算法p59 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1gL4y1a7Fu?p=59">https://www.bilibili.com/video/BV1gL4y1a7Fu?p=59</a></p>
 
                 
             </div>
@@ -587,7 +580,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/25/Spring%E4%B9%8BIOC/">http://example.com/2022/03/25/Spring%E4%B9%8BIOC/</a>
+                    <a href="http://example.com/2022/03/28/%E4%BB%8E%E6%9A%B4%E5%8A%9B%E9%80%92%E5%BD%92%E5%88%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">http://example.com/2022/03/28/%E4%BB%8E%E6%9A%B4%E5%8A%9B%E9%80%92%E5%BD%92%E5%88%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -670,9 +663,48 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2022/03/28/%E4%BB%8E%E6%9A%B4%E5%8A%9B%E9%80%92%E5%BD%92%E5%88%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="从暴力递归到动态规划">
+                        
+                        <span class="card-title">从暴力递归到动态规划</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Meet Alpha
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/2022/03/25/Spring%E4%B9%8BAOP/">
                     <div class="card-image">
@@ -690,45 +722,8 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-25
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            Meet Alpha
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/02/23/ThreadPoolExecutor%E7%9A%847%E4%B8%AA%E5%8F%82%E6%95%B0/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="ThreadPoolExecutor的7个参数">
-                        
-                        <span class="card-title">ThreadPoolExecutor的7个参数</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-23
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-25
                             </span>
                         <span class="publish-author">
                             
